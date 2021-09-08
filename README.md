@@ -5,10 +5,10 @@ This project is about developing an Email Client that will have a number of diff
 
 ## Requirements:
   The email client will perform the following functionailites.
-    * A user should be able to login into his account to access his emails.
-    * A user should be able to compose, edit and send an email to other users.
-    * A user should be able to search and forward emails to other users.
-    * A user should be able to send attachments (image, files etc.) along with an email.
+   * A user should be able to login into his account to access his emails.
+   * A user should be able to compose, edit and send an email to other users.
+   * A user should be able to search and forward emails to other users.
+   * A user should be able to send attachments (image, files etc.) along with an email.
 
 ## Members:
 
