@@ -12,9 +12,9 @@ This project is about developing an Email Client that will have a number of diff
 
 ## Members:
 
-### Karan Singh(Lead) (KaranSinghmods)
-### Anjal Gajurel (anjalgajurel)
-### Alonzo Reed (Helixcon)
+* Karan Singh(Lead) (KaranSinghmods)
+* Anjal Gajurel (anjalgajurel)
+* Alonzo Reed (Helixcon)
 
 ## Language: Python/Flask
   We have decided to use Python for the backend and probably Flask for the front end. We are still working on the final decision. But, we will work our way into it. 
