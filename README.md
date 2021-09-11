@@ -1,9 +1,18 @@
 # Group-06
 
 Hey! This is Group 6.
+
+## Description
 This project is about developing an Email Client that will have a number of different functionalities based on the customer (TA) expectations.
 
-## Requirements:
+## Features
+  The user will be able to:
+  * Login via Username and Password
+  * Send and Receive Emails
+  * Search through Emails
+  * Add Attachments
+  
+## Objective / Requirements:
   The email client will perform the following functionailites.
    * A user should be able to login into his account to access his emails.
    * A user should be able to compose, edit and send an email to other users.
@@ -11,7 +20,6 @@ This project is about developing an Email Client that will have a number of diff
    * A user should be able to send attachments (image, files etc.) along with an email.
 
 ## Members:
-
 * Karan Singh(Lead) (KaranSinghmods)
 * Anjal Gajurel (anjalgajurel)
 * Alonzo Reed (Helixcon)
