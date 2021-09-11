@@ -19,6 +19,13 @@ This project is about developing an Email Client that will have a number of diff
    * A user should be able to search and forward emails to other users.
    * A user should be able to send attachments (image, files etc.) along with an email.
 
+## Features:
+  These are the listed features for the web app:
+    * Secure login form
+    * Send/Receive emails
+    * Send/Receive attachments
+    * Search emails
+
 ## Members:
 * Karan Singh(Lead) (KaranSinghmods)
 * Anjal Gajurel (anjalgajurel)
