@@ -19,12 +19,6 @@ This project is about developing an Email Client that will have a number of diff
   * Search through Emails
   * Add Attachments
 
-## User Stories:
-Descibe how the user interact with the system features.
-1. Send/Receive attachments
-* As the user I want to be able to click new email icon and then be able to type or attach info.Afterwards be able to enter address and send to another person.
-* When user want to see email. They just have to scroll and click on the email to see the info and download the attachment(s).
-
 ## Members:
 * Karan Singh(Lead) (KaranSinghmods)
 * Anjal Gajurel (anjalgajurel)
