@@ -5,19 +5,19 @@ Hey! This is Group 6.
 ## Description
 This project is about developing an Email Client that will have a number of different functionalities based on the customer (TA) expectations.
 
-## Features
-  The user will be able to:
-  * Login via Username and Password
-  * Send and Receive Emails
-  * Search through Emails
-  * Add Attachments
-  
 ## Objective / Requirements:
   The email client will perform the following functionailites.
    * A user should be able to login into his account to access his emails.
    * A user should be able to compose, edit and send an email to other users.
    * A user should be able to search and forward emails to other users.
    * A user should be able to send attachments (image, files etc.) along with an email.
+
+## Features
+  The user will be able to:
+  * Login via Username and Password
+  * Send and Receive Emails
+  * Search through Emails
+  * Add Attachments
 
 ## User Stories:
 Descibe how the user interact with the system features.
