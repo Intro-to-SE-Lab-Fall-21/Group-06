@@ -46,6 +46,8 @@ def travisTest():
             print("FAIL")
 
     print("Test 4: Create email with no sender, but includes a subject and body.")
+    userEmail = "introsetest1@gmail.com"
+    userPassword = "!ntr0test"
     newMessage = EmailMessage()
     newMessage['To'] = ""
     newMessage['Subject'] = "TRAVIS CI TEST"
@@ -60,6 +62,8 @@ def travisTest():
             print("PASS")
 
     print("Test 5: Create email")
+    userEmail = "introsetest1@gmail.com"
+    userPassword = "!ntr0test"
     newMessage = EmailMessage()
     newMessage['To'] = userEmail
     newMessage['Subject'] = "TRAVIS CI TEST"
