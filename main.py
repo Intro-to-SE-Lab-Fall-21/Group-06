@@ -81,11 +81,13 @@ def travisTest():
     with app.test_client() as test_client:
         response = test_client.get('/')
         assert response.status_code == 200
+        print("PASS")
 
     print("Test 7: Navigating to inbox with unauthorized access")
     with app.test_client() as test_client:
         response = test_client.get('/inbox')
-        assert response.status_code == 302
+        assert response.status_code != 200
+        print("PASS")
 
     print("Test 8: Navigating to inbox with authorized access")
     email = "introsetest1@gmail.com"
