@@ -1,0 +1,35 @@
+{% extends "base.html" %} {% block title %}Compose{% endblock %} {% block content
+%}
+<h1 align="center">Compose Email</h1>
+
+<div align="right">
+   <button
+          type="button"
+          onclick ="location.href='/inbox'"
+          class="btn btn-discard">
+     <i class="fa fa-times"></i> Discard</button>
+  </div>
+<form method="POST" enctype="multipart/form-data">
+  <label for="to">To:</label>
+  <input name="to" id="to" class="form-control"/>
+  <label for="subject">Subject:</label>
+  <input name="subject" id="subject" class="form-control"/>
+  <label for="message">Message:</label>
+  <textarea name="message" id="message" placeholder="Message Body"></textarea>
+      <script>
+          CKEDITOR.replace( 'message' );
+      </script>
+  <label for="attachment">Attachment:</label>
+  <br>
+  <input type="file" name="attachment" id="attachment">
+  <br>
+  <div align="center">
+    <button type="submit" class="btn btn-primary">Send</button>
+  </div>
+
+
+
+
+
+</form>
+{% endblock %}
