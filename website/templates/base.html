@@ -15,6 +15,8 @@
       crossorigin="anonymous"
     />
 
+    <script src="//cdn.ckeditor.com/4.14.1/basic/ckeditor.js"></script>
+
     <title>{% block title %}Home{% endblock %}</title>
   </head>
   <body>
@@ -29,11 +31,13 @@
       </button>
       <div class="collapse navbar-collapse" id="navbar">
         <div class="navbar-nav">
-
-          <a class="nav-item nav-link" id="home" href="/">Home</a>
-          <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
-
-          <a class="nav-item nav-link" id="login" href="/login">Login</a>
+          {% if display %}
+            <a class="nav-item nav-link" id="compose" href="/compose">Compose</a>
+            <a class="nav-item nav-link" id="inbox" href="/inbox">Inbox</a>
+            <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+          {% else %}
+            <a class="nav-item nav-link" id="login" href="/">Login</a>
+          {% endif %}
 
         </div>
       </div>
@@ -73,6 +77,9 @@
       integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
       crossorigin="anonymous"
     ></script>
+
+
+
 
     <script
       type="text/javascript"
