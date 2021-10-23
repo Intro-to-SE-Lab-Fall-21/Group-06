@@ -70,9 +70,12 @@ def travisTest():
     newMessage['From'] = "Group 2"
 
     with smtplib.SMTP_SSL(in_server, in_port, context=context) as server:
-        server.login(userEmail, userPassword)
-        server.send_message(newMessage)
-        print("PASS")
+        try: 
+            server.login(userEmail, userPassword)
+            server.send_message(newMessage)
+            print("PASS")
+        except:
+            print("FAIL")
 
     print("Test 6: Navigating to login page")
     with app.test_client() as test_client:
