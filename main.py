@@ -101,7 +101,6 @@ def travisTest():
 
 
 if __name__ == '__main__':
-    if len(sys.argv) == 2 and str(sys.argv[1]) == "travisTest":
-        travisTest()
-
-    app.run(debug=False)
+    travisTest()
+    
+    #app.run(debug=False)
