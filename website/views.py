@@ -2,6 +2,11 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 import smtplib
 import ssl
 
+from flask_login import logout_user
+
+from website import db
+from website.models import User
+
 views = Blueprint('views', __name__)
 server_add = 'smtp.gmail.com'
 port = 465
@@ -22,6 +27,12 @@ def login():
         user_info.write(password + "\n")
         user_info.close()
 
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            new_user = User(email=email, password=password)
+            db.session.add(new_user)
+            db.session.commit()
+
         if authenticate():
             flash('Logged in successfully!', category='success')
             return redirect(url_for('inboxMail.inbox', display=True))
@@ -31,6 +42,7 @@ def login():
 
 @views.route('/logout')
 def logout():
+    logout_user()
     file = open('user_details.txt', 'r+')
     file.truncate(0)
     file.close()

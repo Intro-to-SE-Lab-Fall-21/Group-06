@@ -1,0 +1,36 @@
+{% extends "base.html" %} {% block title %}View{% endblock %} {% block content
+%}
+
+<div align="right">
+   <a href="/inbox">
+     Back to Inbox</a>
+  </div>
+
+<h1>{{subject}}</h1>
+<br>
+<b>From: {{From}}</b>
+<br>
+Time: {{date}}
+
+<br>
+<br>
+
+
+<div class="container">
+
+  {% if isHtml %}
+
+  <iframe>{{ emails |safe }}</iframe>
+  {% else %}
+  <pre
+    style="white-space: pre-wrap"
+  ><span style="font-family: Arial, Helvetica, sans-serif; font-size: 16px" >{{ emails|safe }}</span></pre>
+</div>
+{% endif %}
+
+<button class="btn btn-primary" type="button" onclick="window.location.href='/reply/{{uid}}'">Reply</button>
+<button class="btn btn-primary" type="button" onclick="window.location.href='/forward/{{uid}}'">Forward</button>
+
+
+
+{% endblock %}
