@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 
@@ -23,6 +24,14 @@ def create_app():
     from .models import User, Email
 
     create_database(app)
+
+    login = LoginManager(app)
+    login.login_view = 'views.login'
+    login.init_app(app)
+
+    @login.user_loader
+    def load_user(id):
+        return User.query.get(int(id))
 
     return app
 
