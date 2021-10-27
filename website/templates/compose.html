@@ -5,17 +5,37 @@
 <div align="right">
    <button
           type="button"
+          {% if reply or forward %}
+          onclick ="location.href='/view_email/{{uid}}'"
+          {% else %}
           onclick ="location.href='/inbox'"
+          {% endif %}
           class="btn btn-discard">
      <i class="fa fa-times"></i> Discard</button>
   </div>
 <form method="POST" enctype="multipart/form-data">
   <label for="to">To:</label>
-  <input name="to" id="to" class="form-control"/>
+  <input name="to" id="to" class="form-control"
+         {% if sender %}
+         value="{{sender}}"
+        {% endif%}
+  />
   <label for="subject">Subject:</label>
-  <input name="subject" id="subject" class="form-control"/>
+  <input name="subject" id="subject" class="form-control"
+    {% if subject %}
+         value = "{{subject}}"
+         {% endif %}
+
+  />
   <label for="message">Message:</label>
-  <textarea name="message" id="message" placeholder="Message Body"></textarea>
+  <textarea name="message" id="message" placeholder="Message Body" value="sth">
+    {% if message %}
+    <br>
+    <br>
+    <br>======================================================
+         {{message}}
+         {% endif %}
+  </textarea>
       <script>
           CKEDITOR.replace( 'message' );
       </script>

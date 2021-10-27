@@ -32,7 +32,6 @@
       <div class="collapse navbar-collapse" id="navbar">
         <div class="navbar-nav">
           {% if display %}
-            <a class="nav-item nav-link" id="compose" href="/compose">Compose</a>
             <a class="nav-item nav-link" id="inbox" href="/inbox">Inbox</a>
             <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
           {% else %}
@@ -76,14 +75,6 @@
       src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
       integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
       crossorigin="anonymous"
-    ></script>
-
-
-
-
-    <script
-      type="text/javascript"
-      src="{{ url_for('static', filename='index.js') }}"
     ></script>
   </body>
 </html>
