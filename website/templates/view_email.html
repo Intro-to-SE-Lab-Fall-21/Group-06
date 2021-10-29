@@ -20,7 +20,7 @@ Time: {{date}}
 
   {% if isHtml %}
 
-  <iframe>{{ emails |safe }}</iframe>
+  {{ emails |safe }}
   {% else %}
   <pre
     style="white-space: pre-wrap"

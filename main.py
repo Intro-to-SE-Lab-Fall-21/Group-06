@@ -109,4 +109,4 @@ if __name__ == '__main__':
     if len(sys.argv) == 2 and str(sys.argv[1]) == "travisTest":
         travisTest()
 
-    app.run(host='127.0.0.1', debug=True)
+    app.run(host='0.0.0.0', debug=True)
