@@ -36,6 +36,10 @@ def login():
         if authenticate():
             flash('Logged in successfully!', category='success')
             return redirect(url_for('inboxMail.inbox', display=True))
+        elif email == '' or password == '':
+            flash('Input required for both fields.', category='error')
+        else:
+            flash('Wrong Credentials Entered. Try Again!', category='error')
 
     return render_template('login.html', display=False)
 
