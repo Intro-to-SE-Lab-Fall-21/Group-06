@@ -1,6 +1,9 @@
 import os
 import email
+import smtplib
+from email import encoders
 from email.header import decode_header
+from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
@@ -8,7 +11,7 @@ from flask import Blueprint, render_template, redirect, request, flash, url_for
 import imaplib
 
 from .compose import sendMail
-from .views import authenticate
+from .views import authenticate, server_add, port, context
 
 inboxMail = Blueprint('inboxMail', __name__)
 
@@ -28,18 +31,33 @@ def inbox():
     password = user_info.readline()
     user_info.close()
 
+    # Find the uids of all emails
+    imap = imaplib.IMAP4_SSL("imap.gmail.com")
+    imap.login(user_email, password)
+    imap.select("INBOX")
+    res, msg = imap.uid('search', None, "ALL")
+    allUids = msg[0].decode()
+    allUidsList = list(allUids.split())
+
+    # Find the uids of unseen emails
+    res, msg = imap.uid('search', None, "UNSEEN")
+    allUnseenUids = msg[0].decode()
+    allUnseenUidsList = list(allUnseenUids.split())
+
     uids = []
     senders = []
     subjects = []
     dates_sent = []
+    isUnseen = []
 
     imap = imaplib.IMAP4_SSL("imap.gmail.com")
     imap.login(user_email, password)
 
-    status, messages = imap.select("INBOX")
+    status, messages = imap.select("INBOX", readonly=True)
     # total number of emails
     messages = int(messages[0])
 
+    # This is for search method
     if request.method == "POST":
         keyword = request.form['searchWord']
         flash("Showing search results for \'%s\'" % keyword, category='success')
@@ -72,6 +90,11 @@ def inbox():
                         subjects.append(subject)
                         senders.append(email.utils.parseaddr(From)[0])
 
+                    if allUidsList[i-1] in allUnseenUidsList:
+                        isUnseen.append('unseen')
+                    else:
+                        isUnseen.append('seen')
+
     else:
         for i in range(messages, 0, -1):
             # fetch the email message by ID
@@ -101,8 +124,13 @@ def inbox():
                     subjects.append(subject)
                     senders.append(email.utils.parseaddr(From)[0])
 
+                    if allUidsList[i - 1] in allUnseenUidsList:
+                        isUnseen.append('unseen')
+                    else:
+                        isUnseen.append('seen')
+
     return render_template('inbox.html', display=True, senders=senders, uids=uids, subjects=subjects,
-                           dates_sent=dates_sent)
+                           dates_sent=dates_sent, isUnseen=isUnseen)
 
 
 @inboxMail.route('/view_email/<uid>', methods=['GET', 'POST'])
@@ -118,6 +146,9 @@ def view_email(uid):
     imap = imaplib.IMAP4_SSL("imap.gmail.com")
     imap.login(user_email, password)
     user_emails = ""
+    subject= ""
+    From = ""
+    date_sent = ""
 
     imap.select("INBOX")
 
@@ -175,61 +206,83 @@ def reply(uid):
     if not authenticate():
         return redirect('/', display=False)
 
-    subject = ""
-    sender = ""
-    message = ""
-
-    user_info = open("user_details.txt", 'r')
-    user_email = user_info.readline()
-    password = user_info.readline()
-    user_info.close()
-
-    imap = imaplib.IMAP4_SSL("imap.gmail.com")
-    imap.login(user_email, password)
-
-    imap.select("INBOX")
-
-    res, msg = imap.fetch(str(uid), "(RFC822)")
-    for response in msg:
-        if isinstance(response, tuple):
-            msg = email.message_from_bytes(response[1])
-
-            subject, encoding = decode_header(msg["Subject"])[0]
-            if isinstance(subject, bytes):
-                subject = subject.decode(encoding)
-
-            sender, encoding = decode_header(msg.get("From"))[0]
-            if isinstance(sender, bytes):
-                sender = sender.decode(encoding)
-
-            if msg.is_multipart():
-                for part in msg.walk():
-                    content_type = part.get_content_type()
-                    content_disposition = str(part.get("Content-Disposition"))
-
-                    if content_type == "text/plain" or content_type == "text/html" and "attachment" not in \
-                            content_disposition:
-                        message = part.get_payload(decode=True).decode()
-
-            else:
-                message = (msg.get_payload(decode=True).decode())
-
-    sender = email.utils.parseaddr(sender)[1]
-    subject = "RE: " + subject
-
     if request.method == "POST":
-        message = MIMEMultipart()
-        message['To'] = request.form['to']
-        message['Subject'] = request.form['subject']
-        message['From'] = email
+        mess = MIMEMultipart()
+        mess['To'] = request.form['to']
+        mess['Subject'] = request.form['subject']
+
+        user_info = open("user_details.txt", 'r')
+        from_email = user_info.readline()
+        user_info.close()
+
+        mess['From'] = from_email
         message_body = MIMEText(request.form['message'], 'html', 'utf-8')
         message_body.add_header('Content-Disposition', 'text/html')
 
-        message.attach(message_body)
-        return sendMail(message)
+        mess.attach(message_body)
 
-    return render_template('compose.html', display=True, reply=True, sender=sender, message=message, subject=subject,
-                           uid=uid)
+        image = request.files['attachment']
+        filename = image.filename
+        if filename != '':
+            attachment = open(filename, 'rb')
+
+            p = MIMEBase('application', 'octet-stream')
+            p.set_payload(attachment.read())
+
+            encoders.encode_base64(p)
+            p.add_header('Content-Disposition', f'attachment; filename={filename}')
+            mess.attach(p)
+        return sendMail(mess)
+
+    else:
+        subject = ""
+        sender = ""
+        message = ""
+
+        user_info = open("user_details.txt", 'r')
+        user_email = user_info.readline()
+        password = user_info.readline()
+        user_info.close()
+
+        imap = imaplib.IMAP4_SSL("imap.gmail.com")
+        imap.login(user_email, password)
+
+        imap.select("INBOX")
+
+        res, msg = imap.fetch(str(uid), "(RFC822)")
+        for response in msg:
+            if isinstance(response, tuple):
+                msg = email.message_from_bytes(response[1])
+
+                subject, encoding = decode_header(msg["Subject"])[0]
+                if isinstance(subject, bytes):
+                    subject = subject.decode(encoding)
+
+                sender, encoding = decode_header(msg.get("From"))[0]
+                if isinstance(sender, bytes):
+                    sender = sender.decode(encoding)
+
+                if msg.is_multipart():
+                    for part in msg.walk():
+                        content_type = part.get_content_type()
+                        content_disposition = str(part.get("Content-Disposition"))
+
+                        if content_type == "text/plain" or content_type == "text/html" and "attachment" not in \
+                                content_disposition:
+                            message = part.get_payload(decode=True).decode()
+
+                else:
+                    message = (msg.get_payload(decode=True).decode())
+
+        sender = email.utils.parseaddr(sender)[1]
+        subject = "RE: " + subject
+
+        imap.close()
+        imap.logout()
+
+        return render_template('compose.html', display=True, reply=True, sender=sender, message=message,
+                               subject=subject,
+                               uid=uid)
 
 
 @inboxMail.route('/forward/<uid>', methods=['POST', 'GET'])
@@ -237,8 +290,77 @@ def forward(uid):
     if not authenticate():
         return redirect('/', display=False)
 
-    subject = ""
-    message = ""
+    if request.method == "POST":
+        mess = MIMEMultipart()
+        mess['To'] = request.form['to']
+        mess['Subject'] = request.form['subject']
+
+        user_info = open("user_details.txt", 'r')
+        from_email = user_info.readline()
+        user_info.close()
+
+        mess['From'] = from_email
+        message_body = MIMEText(request.form['message'], 'html', 'utf-8')
+        message_body.add_header('Content-Disposition', 'text/html')
+
+        mess.attach(message_body)
+
+        image = request.files['attachment']
+        filename = image.filename
+        if filename != '':
+            attachment = open(filename, 'rb')
+
+            p = MIMEBase('application', 'octet-stream')
+            p.set_payload(attachment.read())
+
+            encoders.encode_base64(p)
+            p.add_header('Content-Disposition', f'attachment; filename={filename}')
+            mess.attach(p)
+        return sendMail(mess)
+
+    else:
+        subject = ""
+        message = ""
+
+        user_info = open("user_details.txt", 'r')
+        user_email = user_info.readline()
+        password = user_info.readline()
+        user_info.close()
+
+        imap = imaplib.IMAP4_SSL("imap.gmail.com")
+        imap.login(user_email, password)
+
+        imap.select("INBOX")
+
+        res, msg = imap.fetch(str(uid), "(RFC822)")
+        for response in msg:
+            if isinstance(response, tuple):
+                msg = email.message_from_bytes(response[1])
+
+                subject, encoding = decode_header(msg["Subject"])[0]
+                if isinstance(subject, bytes):
+                    subject = subject.decode(encoding)
+
+                if msg.is_multipart():
+                    for part in msg.walk():
+                        content_type = part.get_content_type()
+                        content_disposition = str(part.get("Content-Disposition"))
+
+                        if content_type == "text/plain" or content_type == "text/html" and "attachment" not in \
+                                content_disposition:
+                            message = part.get_payload(decode=True).decode()
+
+                else:
+                    message = (msg.get_payload(decode=True).decode())
+
+    subject = "FWD: " + subject
+    return render_template('compose.html', display=True, forward=True, message=message, subject=subject, uid=uid)
+
+
+@inboxMail.route('/delete/<uid>', methods=['POST', 'GET'])
+def delete(uid):
+    if not authenticate():
+        return redirect('/', display=False)
 
     user_info = open("user_details.txt", 'r')
     user_email = user_info.readline()
@@ -247,41 +369,17 @@ def forward(uid):
 
     imap = imaplib.IMAP4_SSL("imap.gmail.com")
     imap.login(user_email, password)
-
     imap.select("INBOX")
 
-    res, msg = imap.fetch(str(uid), "(RFC822)")
-    for response in msg:
-        if isinstance(response, tuple):
-            msg = email.message_from_bytes(response[1])
+    res, msg = imap.uid('search', None, "ALL")
+    uids = msg[0].decode()
+    uidsList = list(uids.split())
+    email_uid = uidsList[int(uid)-1]
+    imap.uid('STORE', email_uid, '+X-GM-LABELS', '(\\Trash)')
+    imap.expunge()
+    imap.close()
+    imap.logout()
 
-            subject, encoding = decode_header(msg["Subject"])[0]
-            if isinstance(subject, bytes):
-                subject = subject.decode(encoding)
+    flash("Message deleted!", category="success")
 
-            if msg.is_multipart():
-                for part in msg.walk():
-                    content_type = part.get_content_type()
-                    content_disposition = str(part.get("Content-Disposition"))
-
-                    if content_type == "text/plain" or content_type == "text/html" and "attachment" not in \
-                            content_disposition:
-                        message = part.get_payload(decode=True).decode()
-
-            else:
-                message = (msg.get_payload(decode=True).decode())
-
-    subject = "FWD: " + subject
-
-    if request.method == "POST":
-        message = MIMEMultipart()
-        message['To'] = request.form['to']
-        message['Subject'] = request.form['subject']
-        message['From'] = email
-        message_body = MIMEText(request.form['message'], 'html', 'utf-8')
-        message_body.add_header('Content-Disposition', 'text/html')
-
-        message.attach(message_body)
-        return sendMail(message)
-
-    return render_template('compose.html', display=True, forward=True, message=message, subject=subject, uid=uid)
+    return redirect(url_for('inboxMail.inbox', display=True))

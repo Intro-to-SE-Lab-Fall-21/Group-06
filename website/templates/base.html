@@ -20,7 +20,7 @@
     <title>{% block title %}Home{% endblock %}</title>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <button
         class="navbar-toggler"
         type="button"
@@ -31,11 +31,12 @@
       </button>
       <div class="collapse navbar-collapse" id="navbar">
         <div class="navbar-nav">
+          <span class="navbar-brand">G6Mail</span>
           {% if display %}
-            <a class="nav-item nav-link" id="inbox" href="/inbox">Inbox</a>
-            <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+          <li class="nav-item active" ><a class="nav-link" id="inbox" href="/inbox">Inbox</a></li>
+          <li class="nav-item active" ><a class="nav-item nav-link" id="logout" href="/logout">Logout</a></li>
           {% else %}
-            <a class="nav-item nav-link" id="login" href="/">Login</a>
+          <li class="nav-item active" ><a class="nav-item nav-link" id="login" href="/">Login</a></li>
           {% endif %}
 
         </div>
