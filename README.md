@@ -1,6 +1,6 @@
-# Group-06
+# G6Mail
 
-Hey! This is Group 6.
+Hey! This is G6Mail, which stands for Group 6 Mail.
 
 ## Description
 This project is about developing an Email Client that will have a number of different functionalities based on the customer (TA) expectations.
