@@ -25,5 +25,4 @@ This project is about developing an Email Client that will have a number of diff
 * Alonzo Reed ([Helixcon](https://github.com/Helixcon))
 
 ## Language: Python/Flask/HTML
-  We have decided to use Python for the backend and probably Flask for the front end. We are still working on the final decision. But, we will work our way into it. We will also be using HTML for the front end else well. 
-
+  We have decided to use Python for the backend and probably Flask for the front end. We are still working on the final decision. But, we will work our way into it. We will also be using HTML and CSS for the front end as well. 
