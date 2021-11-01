@@ -46,9 +46,32 @@
 								</tr>
 								{% for id in range(0, uids|length) %}
 								<tr>
-									<td class="name"><a href="view_email/{{uids[id]}}">{{ senders[id]}}</a></td>
-									<td class="subject"><a href="view_email/{{uids[id]}}">{{ subjects[id]}} </a></td>
-									<td class="time">{{ dates_sent[id] }}</td>
+
+									<td class="name"><a href="view_email/{{uids[id]}}">
+										{% if isUnseen[id] == 'unseen'%}
+										<b>{{ senders[id]}}</b>
+										{%else%}
+										{{ senders[id]}}
+										{% endif %}
+									</a></td>
+
+									<td class="subject"><a href="view_email/{{uids[id]}}">
+										{% if isUnseen[id] == 'unseen'%}
+										<b>{{ subjects[id]}}</b>
+										{%else%}
+										{{ subjects[id]}}
+										{% endif %}
+
+										</a></td>
+									<td class="time">
+										{% if isUnseen[id] == 'unseen'%}
+										<b>{{ dates_sent[id]}}</b>
+										{%else%}
+										{{ dates_sent[id] }}
+										{% endif %}
+
+									</td>
+
 								</tr>
 								{% endfor %}
 							</tbody></table>
