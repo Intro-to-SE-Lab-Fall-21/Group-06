@@ -106,7 +106,7 @@ def travisTest():
 
 
 if __name__ == '__main__':
-    if len(sys.argv) == 2 and str(sys.argv[1]) == "travisTest":
+    if str(sys.argv[1]) == "travisTest":
         travisTest()
 
     app.run(host='0.0.0.0', debug=True)
