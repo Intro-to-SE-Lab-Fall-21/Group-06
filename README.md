@@ -25,8 +25,8 @@ This project is about developing an Email Client that will have a number of diff
   * Reply and Forward emails.
 
 ## Members:
-* Karan Singh (Lead) ([KaranSinghmods](https://github.com/KaranSinghmods))
-* Anjal Gajurel ([anjalgajurel](https://github.com/anjalgajurel))
+* Karan Singh ([KaranSinghmods](https://github.com/KaranSinghmods))
+* Anjal Gajurel (Lead) ([anjalgajurel](https://github.com/anjalgajurel))
 * Alonzo Reed ([Helixcon](https://github.com/Helixcon))
 
 ## Language: Python/Flask/HTML
